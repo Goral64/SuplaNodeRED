@@ -1,0 +1,42 @@
+{
+    "supla-config": {
+        "label": {
+            "name": "Name",
+            "token": "Access token",
+            "server": "Server",
+            "stateSource": "Live state",
+            "pollInterval": "Poll every",
+            "mqttHost": "MQTT broker",
+            "mqttPort": "Port",
+            "mqttTls": "TLS",
+            "mqttInsecure": "Accept any certificate",
+            "mqttUsername": "MQTT user",
+            "mqttPassword": "MQTT password",
+            "mqttPrefix": "Topic prefix",
+            "suid": "User ID",
+            "fromEnv": "Take settings from environment variables",
+            "restInsecure": "Accept any certificate (self-signed server)"
+        },
+        "placeholder": {
+            "server": "read from the token",
+            "mqttUsername": "user ID from the token",
+            "suid": "read from the token"
+        },
+        "stateSource": {
+            "mqtt": "MQTT (instant)",
+            "poll": "Ask the Cloud periodically",
+            "none": "None (actions only)"
+        },
+        "check": {
+            "button": "Check connection",
+            "ok": "OK: __server__, user __suid__",
+            "failed": "Failed:"
+        },
+        "errors": {
+            "noConfig": "Choose a SUPLA server first"
+        },
+        "tip": {
+            "fromEnv": "Token and MQTT come from SUPLA_TOKEN, SUPLA_SERVER, SUPLA_MQTT_URL, SUPLA_MQTT_USERNAME, SUPLA_MQTT_PASSWORD, SUPLA_MQTT_PREFIX. Without SUPLA_MQTT_URL the state is polled."
+        }
+    }
+}

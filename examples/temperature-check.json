@@ -1,0 +1,124 @@
+[
+    {
+        "id": "a1t3mp00000001",
+        "type": "tab",
+        "label": "Temperature check",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a1t3mp00000002",
+        "type": "inject",
+        "z": "a1t3mp00000001",
+        "name": "every 10 min",
+        "props": [],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "a1t3mp00000003"
+            ]
+        ]
+    },
+    {
+        "id": "a1t3mp00000003",
+        "type": "supla-get",
+        "z": "a1t3mp00000001",
+        "name": "Thermometer",
+        "config": "a1c0nf160000001",
+        "targetType": "channel",
+        "target": "",
+        "targetCaption": "",
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "a1t3mp00000004"
+            ]
+        ]
+    },
+    {
+        "id": "a1t3mp00000004",
+        "type": "switch",
+        "z": "a1t3mp00000001",
+        "name": "below 18 °C",
+        "property": "payload.temperature",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "18",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "a1t3mp00000005"
+            ]
+        ]
+    },
+    {
+        "id": "a1t3mp00000005",
+        "type": "change",
+        "z": "a1t3mp00000001",
+        "name": "payload = true",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "x": 690,
+        "y": 100,
+        "wires": [
+            [
+                "a1t3mp00000006"
+            ]
+        ]
+    },
+    {
+        "id": "a1t3mp00000006",
+        "type": "supla-out",
+        "z": "a1t3mp00000001",
+        "name": "Heater",
+        "config": "a1c0nf160000001",
+        "targetType": "channel",
+        "target": "",
+        "action": "",
+        "params": "",
+        "targetCaption": "",
+        "x": 860,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1c0nf160000001",
+        "type": "supla-config",
+        "name": "SUPLA",
+        "server": "",
+        "stateSource": "mqtt",
+        "pollInterval": 10,
+        "mqttHost": "",
+        "mqttPort": 1883,
+        "mqttTls": false,
+        "mqttInsecure": false,
+        "mqttUsername": "",
+        "mqttPrefix": "",
+        "suid": ""
+    }
+]

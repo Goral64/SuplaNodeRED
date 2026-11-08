@@ -1,0 +1,35 @@
+<script type="text/html" data-help-name="supla-config">
+    <p>Connection to a SUPLA account: the Cloud REST API for lists and actions, and optionally MQTT for live state.</p>
+    <h3>Properties</h3>
+    <dl class="message-properties">
+        <dt>Take settings from environment variables</dt>
+        <dd>For ready-made installs. The token and MQTT settings are read when Node-RED starts from
+            <code>SUPLA_TOKEN</code>, <code>SUPLA_SERVER</code> (optional), <code>SUPLA_MQTT_URL</code>
+            (e.g. <code>mqtt://mosquitto:1883</code>), <code>SUPLA_MQTT_USERNAME</code>,
+            <code>SUPLA_MQTT_PASSWORD</code>, <code>SUPLA_MQTT_PREFIX</code> and <code>SUPLA_TLS_INSECURE</code>.
+            Without <code>SUPLA_MQTT_URL</code> the state is polled from the Cloud.</dd>
+        <dt>Access token</dt>
+        <dd>A personal access token from the Cloud (Security, Personal access tokens). It needs at least
+            <code>channels_r</code>, <code>channels_ea</code>, and for groups and scenes <code>channelgroups_r</code>,
+            <code>channelgroups_ea</code>, <code>scenes_r</code>, <code>scenes_ea</code>.</dd>
+        <dt>Server</dt>
+        <dd>Leave empty, the token already contains the server address. Fill it in only if the Cloud is reached
+            at a different address, e.g. <code>https://192.168.1.10</code>.</dd>
+        <dt>Accept any certificate</dt>
+        <dd>For your own server with a self-signed certificate. A better way is to give Node-RED the CA
+            certificate of the server in <code>NODE_EXTRA_CA_CERTS</code>.</dd>
+        <dt>Live state</dt>
+        <dd><b>MQTT</b>: state changes arrive at once from the broker supla-server publishes to. MQTT has to be
+            enabled in the Cloud (Integrations, MQTT Broker), where you also generate the password.
+            <br><b>Ask the Cloud</b>: without MQTT the node asks for all states every few seconds. The Cloud allows
+            about 1000 requests per hour, so don't go below 5 s.
+            <br><b>None</b>: only actions and reading state on demand.</dd>
+        <dt>MQTT user</dt>
+        <dd>Empty means the user ID from the token, which is what the SUPLA broker expects. On a self-hosted
+            broker with its own accounts put that account here.</dd>
+        <dt>Topic prefix</dt>
+        <dd>Only if supla-server is set up with a prefix in front of <code>supla/</code>.</dd>
+        <dt>User ID</dt>
+        <dd>Read from the token. Set it by hand only when the token can't be checked.</dd>
+    </dl>
+</script>

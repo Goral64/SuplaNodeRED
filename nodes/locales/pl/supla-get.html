@@ -1,0 +1,20 @@
+<script type="text/html" data-help-name="supla-get">
+    <p>Odczytuje z Cloud bieżący stan kanału albo grupy kanałów.</p>
+    <h3>Wejście</h3>
+    <dl class="message-properties">
+        <dt class="optional">channelId <span class="property-type">number</span></dt>
+        <dd>ID kanału, zastępuje ustawiony w węźle.</dd>
+        <dt class="optional">target <span class="property-type">object</span></dt>
+        <dd><code>{"type": "channel" | "group", "id": 123}</code></dd>
+    </dl>
+    <h3>Wyjście</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>Stan, np. <code>{"on": true, "connected": true}</code>,
+            <code>{"shut": 40, "isCalibrating": false}</code> albo <code>{"temperature": 21.3}</code>.</dd>
+        <dt>channel <span class="property-type">object</span></dt>
+        <dd><code>{id, type, deviceId, caption, function}</code></dd>
+        <dt>topic <span class="property-type">string</span></dt>
+        <dd><code>supla/channel/&lt;id&gt;</code> albo <code>supla/group/&lt;id&gt;</code></dd>
+    </dl>
+</script>

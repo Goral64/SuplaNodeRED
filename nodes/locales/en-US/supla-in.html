@@ -1,0 +1,27 @@
+<script type="text/html" data-help-name="supla-in">
+    <p>Sends a message when the state of a channel changes.</p>
+    <p>State comes from MQTT or from asking the Cloud, as set in the server configuration.</p>
+    <h3>Properties</h3>
+    <dl class="message-properties">
+        <dt>Channels</dt>
+        <dd>Nothing selected means all channels of the account.</dd>
+        <dt>Only on change of</dt>
+        <dd>Comma separated state fields, e.g. <code>on</code> or <code>temperature,humidity</code>. Empty means
+            any change.</dd>
+        <dt>Send the current state at start</dt>
+        <dd>Also send the state known right after connecting (<code>msg.initial</code> is then <code>true</code>).</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>The whole channel state, e.g. <code>{"on": true, "connected": true, "connectedCode": "CONNECTED"}</code>.</dd>
+        <dt>previous <span class="property-type">object</span></dt>
+        <dd>The state before the change, if known.</dd>
+        <dt>changed <span class="property-type">array</span></dt>
+        <dd>Names of the fields that changed.</dd>
+        <dt>channel <span class="property-type">object</span></dt>
+        <dd><code>{id, deviceId, caption, function}</code></dd>
+        <dt>topic <span class="property-type">string</span></dt>
+        <dd><code>supla/channel/&lt;id&gt;</code></dd>
+    </dl>
+</script>

@@ -1,0 +1,18 @@
+{
+    "supla-get": {
+        "label": {
+            "config": "Server",
+            "name": "Name",
+            "targetType": "Type",
+            "target": "Item"
+        },
+        "targetType": {
+            "channel": "Channel",
+            "group": "Channel group"
+        },
+        "errors": {
+            "noConfig": "No SUPLA server configured",
+            "noTarget": "No channel set (choose one or send msg.channelId)"
+        }
+    }
+}

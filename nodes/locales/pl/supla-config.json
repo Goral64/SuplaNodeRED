@@ -1,0 +1,42 @@
+{
+    "supla-config": {
+        "label": {
+            "name": "Nazwa",
+            "token": "Token dostępu",
+            "server": "Serwer",
+            "stateSource": "Stan na żywo",
+            "pollInterval": "Pytaj co",
+            "mqttHost": "Broker MQTT",
+            "mqttPort": "Port",
+            "mqttTls": "TLS",
+            "mqttInsecure": "Akceptuj każdy certyfikat",
+            "mqttUsername": "Użytkownik MQTT",
+            "mqttPassword": "Hasło MQTT",
+            "mqttPrefix": "Prefiks tematów",
+            "suid": "ID użytkownika",
+            "fromEnv": "Ustawienia ze zmiennych środowiskowych",
+            "restInsecure": "Akceptuj każdy certyfikat (serwer z własnym certyfikatem)"
+        },
+        "placeholder": {
+            "server": "z tokena",
+            "mqttUsername": "ID użytkownika z tokena",
+            "suid": "z tokena"
+        },
+        "stateSource": {
+            "mqtt": "MQTT (od razu)",
+            "poll": "Pytanie Cloud co jakiś czas",
+            "none": "Brak (tylko akcje)"
+        },
+        "check": {
+            "button": "Sprawdź połączenie",
+            "ok": "OK: __server__, użytkownik __suid__",
+            "failed": "Błąd:"
+        },
+        "errors": {
+            "noConfig": "Najpierw wybierz serwer SUPLA"
+        },
+        "tip": {
+            "fromEnv": "Token i MQTT z SUPLA_TOKEN, SUPLA_SERVER, SUPLA_MQTT_URL, SUPLA_MQTT_USERNAME, SUPLA_MQTT_PASSWORD, SUPLA_MQTT_PREFIX. Bez SUPLA_MQTT_URL stan jest pobierany z Cloud co jakiś czas."
+        }
+    }
+}

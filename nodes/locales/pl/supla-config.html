@@ -1,0 +1,34 @@
+<script type="text/html" data-help-name="supla-config">
+    <p>Połączenie z kontem SUPLA: REST API Cloud do list i akcji, opcjonalnie MQTT do stanu na żywo.</p>
+    <h3>Właściwości</h3>
+    <dl class="message-properties">
+        <dt>Ustawienia ze zmiennych środowiskowych</dt>
+        <dd>Dla gotowych instalacji. Token i MQTT są czytane przy starcie Node-RED z <code>SUPLA_TOKEN</code>,
+            <code>SUPLA_SERVER</code> (opcjonalnie), <code>SUPLA_MQTT_URL</code> (np. <code>mqtt://mosquitto:1883</code>),
+            <code>SUPLA_MQTT_USERNAME</code>, <code>SUPLA_MQTT_PASSWORD</code>, <code>SUPLA_MQTT_PREFIX</code>
+            i <code>SUPLA_TLS_INSECURE</code>. Bez <code>SUPLA_MQTT_URL</code> stan jest pobierany z Cloud co jakiś czas.</dd>
+        <dt>Token dostępu</dt>
+        <dd>Osobisty token dostępu z Cloud (Bezpieczeństwo, Osobiste tokeny dostępowe). Potrzebne są co najmniej
+            <code>channels_r</code>, <code>channels_ea</code>, a dla grup i scen <code>channelgroups_r</code>,
+            <code>channelgroups_ea</code>, <code>scenes_r</code>, <code>scenes_ea</code>.</dd>
+        <dt>Serwer</dt>
+        <dd>Zostaw puste, adres serwera jest w tokenie. Wpisz go tylko wtedy, gdy Cloud jest pod innym adresem,
+            np. <code>https://192.168.1.10</code>.</dd>
+        <dt>Akceptuj każdy certyfikat</dt>
+        <dd>Dla własnego serwera z samopodpisanym certyfikatem. Lepiej jednak podać Node-RED certyfikat CA
+            serwera w <code>NODE_EXTRA_CA_CERTS</code>.</dd>
+        <dt>Stan na żywo</dt>
+        <dd><b>MQTT</b>: zmiany przychodzą od razu z brokera, do którego publikuje supla-server. MQTT trzeba włączyć
+            w Cloud (Integracje, Broker MQTT), tam też generuje się hasło.
+            <br><b>Pytanie Cloud</b>: bez MQTT węzeł co kilka sekund pobiera stan wszystkich kanałów. Cloud pozwala
+            na ok. 1000 zapytań na godzinę, więc nie schodź poniżej 5 s.
+            <br><b>Brak</b>: tylko akcje i odczyt stanu na żądanie.</dd>
+        <dt>Użytkownik MQTT</dt>
+        <dd>Puste oznacza ID użytkownika z tokena, takiego loginu oczekuje broker SUPLA. Przy własnym brokerze
+            z własnymi kontami wpisz tu to konto.</dd>
+        <dt>Prefiks tematów</dt>
+        <dd>Tylko jeśli supla-server ma ustawiony prefiks przed <code>supla/</code>.</dd>
+        <dt>ID użytkownika</dt>
+        <dd>Odczytywane z tokena. Wpisz ręcznie tylko wtedy, gdy tokena nie da się sprawdzić.</dd>
+    </dl>
+</script>

@@ -1,0 +1,21 @@
+{
+    "supla-in": {
+        "label": {
+            "config": "Server",
+            "name": "Name",
+            "channels": "Channels",
+            "properties": "Only on change of",
+            "sendInitial": "Send the current state at start"
+        },
+        "placeholder": {
+            "properties": "any change, e.g. on,hi,temperature"
+        },
+        "tip": {
+            "channels": "Nothing selected means all channels. Ctrl+click selects more."
+        },
+        "errors": {
+            "noConfig": "No SUPLA server configured",
+            "noSource": "live state is off in the server settings"
+        }
+    }
+}

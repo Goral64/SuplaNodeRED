@@ -1,0 +1,19 @@
+<script type="text/html" data-help-name="supla-trigger">
+    <p>Wysyła wiadomość, gdy użyto przycisku podłączonego do kanału action trigger, np. dwukrotne naciśnięcie
+        albo przytrzymanie.</p>
+    <p>Wymaga MQTT w ustawieniach serwera, API Cloud nie podaje tych zdarzeń.</p>
+    <h3>Właściwości</h3>
+    <dl class="message-properties">
+        <dt>Akcje</dt>
+        <dd>Po przecinku, np. <code>press_x1,press_x2,hold</code>. Puste oznacza wszystkie. Możliwe wartości:
+            <code>turn_on</code>, <code>turn_off</code>, <code>toggle_x1</code>…<code>toggle_x5</code>,
+            <code>press_x1</code>…<code>press_x5</code>, <code>hold</code>.</dd>
+    </dl>
+    <h3>Wyjście</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>Akcja, np. <code>press_x2</code>.</dd>
+        <dt>channel <span class="property-type">object</span></dt>
+        <dd><code>{id, deviceId, caption, function}</code></dd>
+    </dl>
+</script>

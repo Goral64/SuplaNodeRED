@@ -1,0 +1,83 @@
+<script type="text/javascript">
+RED.nodes.registerType('supla-trigger', {
+    category: 'SUPLA',
+    color: '#9fd6a3',
+    defaults: {
+        name: {value: ''},
+        config: {value: '', type: 'supla-config', required: true},
+        channels: {value: []},
+        actions: {value: ''},
+        channelsCaption: {value: ''},
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: 'supla.svg',
+    paletteLabel: 'supla trigger',
+    label: function () {
+        if (this.name) {
+            return this.name;
+        }
+        const what = this.channelsCaption || ((this.channels || []).length === 1 ? '#' + this.channels[0] : 'supla trigger');
+        return this.actions ? what + ': ' + this.actions : what;
+    },
+    oneditprepare: function () {
+        const node = this;
+        const S = window.SuplaNodeRED;
+        const sel = $('#node-input-channels-select');
+        const status = $('#supla-trigger-status');
+
+        function load(refresh) {
+            status.text('…');
+            S.load($('#node-input-config').val(), 'channels', refresh).then(function (items) {
+                S.fill(sel, items.filter(function (i) {
+                    return i.function === 'ACTION_TRIGGER';
+                }), sel.val() || node.channels);
+                status.text('');
+            }, function (err) {
+                S.fill(sel, [], sel.val() || node.channels);
+                status.text(err.message);
+            });
+        }
+
+        $('#node-input-config').on('change', function () {
+            load(false);
+        });
+        $('#supla-trigger-refresh').on('click', function () {
+            load(true);
+        });
+        load(false);
+    },
+    oneditsave: function () {
+        const sel = $('#node-input-channels-select');
+        this.channels = (sel.val() || []).map(Number);
+        const items = sel.find('option:selected').map(function () {
+            return $(this).data('item');
+        }).get();
+        this.channelsCaption = items.length === 1 && items[0] ? (items[0].caption || items[0].device) : '';
+    },
+});
+</script>
+
+<script type="text/html" data-template-name="supla-trigger">
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> <span data-i18n="supla-trigger.label.config"></span></label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-channels-select"><i class="fa fa-list"></i> <span data-i18n="supla-trigger.label.channels"></span></label>
+        <select id="node-input-channels-select" multiple size="6" style="width: calc(70% - 40px);"></select>
+        <button type="button" class="red-ui-button" id="supla-trigger-refresh" style="vertical-align: top;"><i class="fa fa-refresh"></i></button>
+    </div>
+    <div class="form-row">
+        <label></label><span data-i18n="supla-trigger.tip.channels" style="font-size: 0.9em; opacity: 0.8;"></span>
+        <span id="supla-trigger-status" style="color: var(--red-ui-text-color-error, #c00);"></span>
+    </div>
+    <div class="form-row">
+        <label for="node-input-actions"><i class="fa fa-hand-pointer-o"></i> <span data-i18n="supla-trigger.label.actions"></span></label>
+        <input type="text" id="node-input-actions" data-i18n="[placeholder]supla-trigger.placeholder.actions">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="supla-trigger.label.name"></span></label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>

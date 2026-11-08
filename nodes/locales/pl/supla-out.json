@@ -1,0 +1,26 @@
+{
+    "supla-out": {
+        "label": {
+            "config": "Serwer",
+            "name": "Nazwa",
+            "targetType": "Cel",
+            "target": "Element",
+            "action": "Akcja",
+            "params": "Parametry"
+        },
+        "targetType": {
+            "channel": "Kanał",
+            "group": "Grupa kanałów",
+            "scene": "Scena",
+            "msg": "Z msg.target"
+        },
+        "action": {
+            "fromPayload": "z msg.payload / msg.action"
+        },
+        "errors": {
+            "noConfig": "Brak konfiguracji serwera SUPLA",
+            "noTarget": "Brak celu (wybierz albo wyślij msg.target / msg.channelId)",
+            "badParams": "Parametry to niepoprawny JSON"
+        }
+    }
+}

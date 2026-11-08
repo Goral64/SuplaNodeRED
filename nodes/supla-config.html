@@ -1,0 +1,236 @@
+<script type="text/javascript">
+(function () {
+    // Shared editor helper: fills selects with channels, groups and scenes
+    // of the chosen supla-config node.
+    const cache = {};
+
+    function configPayload(configId) {
+        const cfg = RED.nodes.node(configId);
+        // A token typed in this editor session is sent along, otherwise the
+        // runtime uses the stored one.
+        return {
+            id: configId,
+            fromEnv: !!(cfg && cfg.fromEnv),
+            insecure: !!(cfg && cfg.restInsecure),
+            server: cfg ? cfg.server : undefined,
+            token: cfg && cfg.credentials && cfg.credentials.token ? cfg.credentials.token : '__PWRD__',
+        };
+    }
+
+    function load(configId, what, refresh) {
+        if (!configId || configId === '_ADD_') {
+            return Promise.reject(new Error(RED._('node-red-contrib-supla/supla-config:supla-config.errors.noConfig')));
+        }
+        const key = configId + '/' + what;
+        if (!refresh && cache[key]) {
+            return cache[key];
+        }
+        const body = Object.assign(configPayload(configId), {refresh: !!refresh});
+        cache[key] = new Promise(function (resolve, reject) {
+            $.ajax({
+                url: 'supla/lookup/' + what,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(body),
+            }).done(resolve).fail(function (xhr) {
+                delete cache[key];
+                const msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText;
+                reject(new Error(msg));
+            });
+        });
+        return cache[key];
+    }
+
+    function label(item) {
+        const parts = ['#' + item.id, item.caption || item.functionCaption || item.function || ''];
+        if (item.device) {
+            parts.push('(' + item.device + ')');
+        }
+        return parts.filter(Boolean).join(' ');
+    }
+
+    // Fills a <select> (single or multiple) and keeps the current selection.
+    // Selected ids that are not in the list stay as "#id" entries.
+    function fill(select, items, selected) {
+        const values = (Array.isArray(selected) ? selected : [selected]).filter(function (v) {
+            return v !== undefined && v !== null && v !== '';
+        }).map(String);
+        select.empty();
+        if (!select.prop('multiple')) {
+            select.append($('<option>').val('').text('—'));
+        }
+        const groups = {};
+        items.forEach(function (item) {
+            const g = item.location || '';
+            (groups[g] = groups[g] || []).push(item);
+        });
+        Object.keys(groups).sort().forEach(function (g) {
+            const parent = g ? $('<optgroup>').attr('label', g).appendTo(select) : select;
+            groups[g].forEach(function (item) {
+                $('<option>').val(String(item.id)).text(label(item)).data('item', item).appendTo(parent);
+            });
+        });
+        values.forEach(function (v) {
+            if (!select.find('option[value="' + v + '"]').length) {
+                select.append($('<option>').val(v).text('#' + v));
+            }
+        });
+        select.val(select.prop('multiple') ? values : (values[0] || ''));
+    }
+
+    function itemOf(select) {
+        return select.find('option:selected').data('item');
+    }
+
+    window.SuplaNodeRED = {load: load, fill: fill, itemOf: itemOf, label: label};
+})();
+
+RED.nodes.registerType('supla-config', {
+    category: 'config',
+    defaults: {
+        name: {value: ''},
+        fromEnv: {value: false},
+        server: {value: ''},
+        restInsecure: {value: false},
+        stateSource: {value: 'mqtt'},
+        pollInterval: {value: 10, validate: RED.validators.number()},
+        mqttHost: {value: ''},
+        mqttPort: {value: 1883, validate: RED.validators.number(true)},
+        mqttTls: {value: false},
+        mqttInsecure: {value: false},
+        mqttUsername: {value: ''},
+        mqttPrefix: {value: ''},
+        suid: {value: ''},
+    },
+    credentials: {
+        token: {type: 'password'},
+        mqttPassword: {type: 'password'},
+    },
+    label: function () {
+        if (this.name) {
+            return this.name;
+        }
+        return this.fromEnv ? 'SUPLA (env)' : (this.server || 'SUPLA');
+    },
+    oneditprepare: function () {
+        const node = this;
+        function toggle() {
+            const env = $('#node-config-input-fromEnv').prop('checked');
+            const src = $('#node-config-input-stateSource').val();
+            $('.supla-manual-row').toggle(!env);
+            $('.supla-env-row').toggle(env);
+            $('.supla-mqtt-row').toggle(!env && src === 'mqtt');
+            $('.supla-poll-row').toggle(env || src === 'poll');
+        }
+        $('#node-config-input-stateSource').on('change', toggle);
+        $('#node-config-input-fromEnv').on('change', toggle);
+        toggle();
+        $('#node-config-input-mqttTls').on('change', function () {
+            const port = $('#node-config-input-mqttPort');
+            if (this.checked && port.val() === '1883') {
+                port.val(8883);
+            } else if (!this.checked && port.val() === '8883') {
+                port.val(1883);
+            }
+        });
+        $('#supla-config-check').on('click', function () {
+            const out = $('#supla-config-check-result').text('…');
+            const token = $('#node-config-input-token').val();
+            $.ajax({
+                url: 'supla/lookup/check',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id: node.id,
+                    fromEnv: $('#node-config-input-fromEnv').prop('checked'),
+                    server: $('#node-config-input-server').val(),
+                    insecure: $('#node-config-input-restInsecure').prop('checked'),
+                    token: token,
+                }),
+            }).done(function (r) {
+                out.text(node._('supla-config.check.ok', {server: r.server, suid: r.suid}));
+                if (!$('#node-config-input-suid').val()) {
+                    $('#node-config-input-suid').attr('placeholder', r.suid);
+                }
+            }).fail(function (xhr) {
+                out.text(node._('supla-config.check.failed') + ' ' +
+                    (xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText));
+            });
+        });
+    },
+});
+</script>
+
+<script type="text/html" data-template-name="supla-config">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="supla-config.label.name"></span></label>
+        <input type="text" id="node-config-input-name">
+    </div>
+    <div class="form-row">
+        <label></label>
+        <input type="checkbox" id="node-config-input-fromEnv" style="width: auto; margin: 0 4px 0 0;">
+        <label for="node-config-input-fromEnv" style="width: auto;" data-i18n="supla-config.label.fromEnv"></label>
+    </div>
+    <div class="form-row supla-env-row">
+        <label></label><span data-i18n="supla-config.tip.fromEnv" style="font-size: 0.9em; opacity: 0.8;"></span>
+    </div>
+    <div class="form-row supla-manual-row">
+        <label for="node-config-input-token"><i class="fa fa-key"></i> <span data-i18n="supla-config.label.token"></span></label>
+        <input type="password" id="node-config-input-token">
+    </div>
+    <div class="form-row supla-manual-row">
+        <label for="node-config-input-server"><i class="fa fa-globe"></i> <span data-i18n="supla-config.label.server"></span></label>
+        <input type="text" id="node-config-input-server" data-i18n="[placeholder]supla-config.placeholder.server">
+    </div>
+    <div class="form-row supla-manual-row">
+        <label></label>
+        <input type="checkbox" id="node-config-input-restInsecure" style="width: auto; margin: 0 4px 0 0;">
+        <label for="node-config-input-restInsecure" style="width: auto;" data-i18n="supla-config.label.restInsecure"></label>
+    </div>
+    <div class="form-row">
+        <label></label>
+        <button type="button" class="red-ui-button" id="supla-config-check"><span data-i18n="supla-config.check.button"></span></button>
+        <span id="supla-config-check-result" style="margin-left: 8px;"></span>
+    </div>
+    <div class="form-row supla-manual-row">
+        <label for="node-config-input-stateSource"><i class="fa fa-exchange"></i> <span data-i18n="supla-config.label.stateSource"></span></label>
+        <select id="node-config-input-stateSource">
+            <option value="mqtt" data-i18n="supla-config.stateSource.mqtt"></option>
+            <option value="poll" data-i18n="supla-config.stateSource.poll"></option>
+            <option value="none" data-i18n="supla-config.stateSource.none"></option>
+        </select>
+    </div>
+    <div class="form-row supla-poll-row">
+        <label for="node-config-input-pollInterval"><i class="fa fa-clock-o"></i> <span data-i18n="supla-config.label.pollInterval"></span></label>
+        <input type="text" id="node-config-input-pollInterval" style="width: 80px;"> s
+    </div>
+    <div class="form-row supla-mqtt-row">
+        <label for="node-config-input-mqttHost"><i class="fa fa-server"></i> <span data-i18n="supla-config.label.mqttHost"></span></label>
+        <input type="text" id="node-config-input-mqttHost" style="width: 45%;">
+        <label for="node-config-input-mqttPort" style="width: auto; margin-left: 10px;" data-i18n="supla-config.label.mqttPort"></label>
+        <input type="text" id="node-config-input-mqttPort" style="width: 70px;">
+    </div>
+    <div class="form-row supla-mqtt-row">
+        <label></label>
+        <input type="checkbox" id="node-config-input-mqttTls" style="width: auto; margin: 0 4px 0 0;">
+        <label for="node-config-input-mqttTls" style="width: auto;" data-i18n="supla-config.label.mqttTls"></label>
+        <input type="checkbox" id="node-config-input-mqttInsecure" style="width: auto; margin: 0 4px 0 16px;">
+        <label for="node-config-input-mqttInsecure" style="width: auto;" data-i18n="supla-config.label.mqttInsecure"></label>
+    </div>
+    <div class="form-row supla-mqtt-row">
+        <label for="node-config-input-mqttUsername"><i class="fa fa-user"></i> <span data-i18n="supla-config.label.mqttUsername"></span></label>
+        <input type="text" id="node-config-input-mqttUsername" data-i18n="[placeholder]supla-config.placeholder.mqttUsername">
+    </div>
+    <div class="form-row supla-mqtt-row">
+        <label for="node-config-input-mqttPassword"><i class="fa fa-lock"></i> <span data-i18n="supla-config.label.mqttPassword"></span></label>
+        <input type="password" id="node-config-input-mqttPassword">
+    </div>
+    <div class="form-row supla-mqtt-row">
+        <label for="node-config-input-mqttPrefix"><i class="fa fa-sitemap"></i> <span data-i18n="supla-config.label.mqttPrefix"></span></label>
+        <input type="text" id="node-config-input-mqttPrefix">
+    </div>
+    <div class="form-row supla-mqtt-row">
+        <label for="node-config-input-suid"><i class="fa fa-id-card-o"></i> <span data-i18n="supla-config.label.suid"></span></label>
+        <input type="text" id="node-config-input-suid" data-i18n="[placeholder]supla-config.placeholder.suid">
+    </div>
+</script>

@@ -1,0 +1,92 @@
+[
+    {
+        "id": "a1b77n00000001",
+        "type": "tab",
+        "label": "Button runs a scene",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a1b77n00000002",
+        "type": "supla-trigger",
+        "z": "a1b77n00000001",
+        "name": "Double press",
+        "config": "a1c0nf160000001",
+        "channels": [],
+        "actions": "press_x2",
+        "channelsCaption": "",
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "a1b77n00000003"
+            ]
+        ]
+    },
+    {
+        "id": "a1b77n00000003",
+        "type": "supla-out",
+        "z": "a1b77n00000001",
+        "name": "Evening scene",
+        "config": "a1c0nf160000001",
+        "targetType": "scene",
+        "target": "",
+        "action": "",
+        "params": "",
+        "targetCaption": "",
+        "x": 350,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1b77n00000004",
+        "type": "supla-trigger",
+        "z": "a1b77n00000001",
+        "name": "Hold",
+        "config": "a1c0nf160000001",
+        "channels": [],
+        "actions": "hold",
+        "channelsCaption": "",
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "a1b77n00000005"
+            ]
+        ]
+    },
+    {
+        "id": "a1b77n00000005",
+        "type": "supla-out",
+        "z": "a1b77n00000001",
+        "name": "All blinds down",
+        "config": "a1c0nf160000001",
+        "targetType": "group",
+        "target": "",
+        "action": "SHUT",
+        "params": "",
+        "targetCaption": "",
+        "x": 350,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1c0nf160000001",
+        "type": "supla-config",
+        "name": "SUPLA",
+        "server": "",
+        "stateSource": "mqtt",
+        "pollInterval": 10,
+        "mqttHost": "",
+        "mqttPort": 1883,
+        "mqttTls": false,
+        "mqttInsecure": false,
+        "mqttUsername": "",
+        "mqttPrefix": "",
+        "suid": ""
+    }
+]

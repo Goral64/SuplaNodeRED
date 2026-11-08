@@ -1,0 +1,18 @@
+<script type="text/html" data-help-name="supla-trigger">
+    <p>Sends a message when a button connected to an action trigger channel is used, e.g. pressed twice or held.</p>
+    <p>Needs MQTT in the server configuration, the Cloud API doesn't report these events.</p>
+    <h3>Properties</h3>
+    <dl class="message-properties">
+        <dt>Actions</dt>
+        <dd>Comma separated, e.g. <code>press_x1,press_x2,hold</code>. Empty means all. Possible values:
+            <code>turn_on</code>, <code>turn_off</code>, <code>toggle_x1</code>…<code>toggle_x5</code>,
+            <code>press_x1</code>…<code>press_x5</code>, <code>hold</code>.</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>The action, e.g. <code>press_x2</code>.</dd>
+        <dt>channel <span class="property-type">object</span></dt>
+        <dd><code>{id, deviceId, caption, function}</code></dd>
+    </dl>
+</script>

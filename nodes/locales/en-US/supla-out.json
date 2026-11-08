@@ -1,0 +1,26 @@
+{
+    "supla-out": {
+        "label": {
+            "config": "Server",
+            "name": "Name",
+            "targetType": "Target",
+            "target": "Item",
+            "action": "Action",
+            "params": "Parameters"
+        },
+        "targetType": {
+            "channel": "Channel",
+            "group": "Channel group",
+            "scene": "Scene",
+            "msg": "Set by msg.target"
+        },
+        "action": {
+            "fromPayload": "from msg.payload / msg.action"
+        },
+        "errors": {
+            "noConfig": "No SUPLA server configured",
+            "noTarget": "No target set (choose one or send msg.target / msg.channelId)",
+            "badParams": "Parameters are not valid JSON"
+        }
+    }
+}

@@ -1,0 +1,27 @@
+<script type="text/html" data-help-name="supla-in">
+    <p>Wysyła wiadomość, gdy zmieni się stan kanału.</p>
+    <p>Stan pochodzi z MQTT albo z pytania Cloud, zależnie od ustawień serwera.</p>
+    <h3>Właściwości</h3>
+    <dl class="message-properties">
+        <dt>Kanały</dt>
+        <dd>Bez zaznaczenia: wszystkie kanały konta.</dd>
+        <dt>Tylko przy zmianie</dt>
+        <dd>Pola stanu po przecinku, np. <code>on</code> albo <code>temperature,humidity</code>. Puste oznacza
+            każdą zmianę.</dd>
+        <dt>Wyślij bieżący stan na starcie</dt>
+        <dd>Wysyła też stan znany zaraz po połączeniu (wtedy <code>msg.initial</code> to <code>true</code>).</dd>
+    </dl>
+    <h3>Wyjście</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">object</span></dt>
+        <dd>Cały stan kanału, np. <code>{"on": true, "connected": true, "connectedCode": "CONNECTED"}</code>.</dd>
+        <dt>previous <span class="property-type">object</span></dt>
+        <dd>Stan sprzed zmiany, jeśli jest znany.</dd>
+        <dt>changed <span class="property-type">array</span></dt>
+        <dd>Nazwy pól, które się zmieniły.</dd>
+        <dt>channel <span class="property-type">object</span></dt>
+        <dd><code>{id, deviceId, caption, function}</code></dd>
+        <dt>topic <span class="property-type">string</span></dt>
+        <dd><code>supla/channel/&lt;id&gt;</code></dd>
+    </dl>
+</script>

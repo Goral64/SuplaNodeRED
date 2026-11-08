@@ -1,0 +1,92 @@
+<script type="text/javascript">
+RED.nodes.registerType('supla-in', {
+    category: 'SUPLA',
+    color: '#9fd6a3',
+    defaults: {
+        name: {value: ''},
+        config: {value: '', type: 'supla-config', required: true},
+        channels: {value: []},
+        properties: {value: ''},
+        sendInitial: {value: false},
+        channelsCaption: {value: ''},
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: 'supla.svg',
+    paletteLabel: 'supla in',
+    label: function () {
+        if (this.name) {
+            return this.name;
+        }
+        if (this.channelsCaption) {
+            return this.channelsCaption;
+        }
+        const n = (this.channels || []).length;
+        return n === 0 ? 'supla: all channels' : n === 1 ? '#' + this.channels[0] : 'supla: ' + n + ' channels';
+    },
+    oneditprepare: function () {
+        const node = this;
+        const S = window.SuplaNodeRED;
+        const sel = $('#node-input-channels-select');
+        const status = $('#supla-in-status');
+
+        function load(refresh) {
+            status.text('…');
+            S.load($('#node-input-config').val(), 'channels', refresh).then(function (items) {
+                S.fill(sel, items.filter(function (i) {
+                    return i.function && i.function !== 'NONE' && i.function !== 'ACTION_TRIGGER';
+                }), sel.val() || node.channels);
+                status.text('');
+            }, function (err) {
+                S.fill(sel, [], sel.val() || node.channels);
+                status.text(err.message);
+            });
+        }
+
+        $('#node-input-config').on('change', function () {
+            load(false);
+        });
+        $('#supla-in-refresh').on('click', function () {
+            load(true);
+        });
+        load(false);
+    },
+    oneditsave: function () {
+        const sel = $('#node-input-channels-select');
+        this.channels = (sel.val() || []).map(Number);
+        const items = sel.find('option:selected').map(function () {
+            return $(this).data('item');
+        }).get();
+        this.channelsCaption = items.length === 1 && items[0] ? items[0].caption : '';
+    },
+});
+</script>
+
+<script type="text/html" data-template-name="supla-in">
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> <span data-i18n="supla-in.label.config"></span></label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-channels-select"><i class="fa fa-list"></i> <span data-i18n="supla-in.label.channels"></span></label>
+        <select id="node-input-channels-select" multiple size="8" style="width: calc(70% - 40px);"></select>
+        <button type="button" class="red-ui-button" id="supla-in-refresh" style="vertical-align: top;"><i class="fa fa-refresh"></i></button>
+    </div>
+    <div class="form-row">
+        <label></label><span data-i18n="supla-in.tip.channels" style="font-size: 0.9em; opacity: 0.8;"></span>
+        <span id="supla-in-status" style="color: var(--red-ui-text-color-error, #c00);"></span>
+    </div>
+    <div class="form-row">
+        <label for="node-input-properties"><i class="fa fa-filter"></i> <span data-i18n="supla-in.label.properties"></span></label>
+        <input type="text" id="node-input-properties" data-i18n="[placeholder]supla-in.placeholder.properties">
+    </div>
+    <div class="form-row">
+        <label></label>
+        <input type="checkbox" id="node-input-sendInitial" style="width: auto; margin: 0 4px 0 0;">
+        <label for="node-input-sendInitial" style="width: auto;" data-i18n="supla-in.label.sendInitial"></label>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="supla-in.label.name"></span></label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>

@@ -1,0 +1,18 @@
+{
+    "supla-get": {
+        "label": {
+            "config": "Serwer",
+            "name": "Nazwa",
+            "targetType": "Typ",
+            "target": "Element"
+        },
+        "targetType": {
+            "channel": "Kanał",
+            "group": "Grupa kanałów"
+        },
+        "errors": {
+            "noConfig": "Brak konfiguracji serwera SUPLA",
+            "noTarget": "Brak kanału (wybierz albo wyślij msg.channelId)"
+        }
+    }
+}

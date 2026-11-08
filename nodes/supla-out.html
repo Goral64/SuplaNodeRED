@@ -1,0 +1,142 @@
+<script type="text/javascript">
+RED.nodes.registerType('supla-out', {
+    category: 'SUPLA',
+    color: '#9fd6a3',
+    defaults: {
+        name: {value: ''},
+        config: {value: '', type: 'supla-config', required: true},
+        targetType: {value: 'channel'},
+        target: {value: ''},
+        action: {value: ''},
+        params: {
+            value: '',
+            validate: function (v) {
+                if (!v || !v.trim()) {
+                    return true;
+                }
+                try {
+                    JSON.parse(v);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            },
+        },
+        targetCaption: {value: ''},
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'supla.svg',
+    align: 'right',
+    paletteLabel: 'supla action',
+    label: function () {
+        if (this.name) {
+            return this.name;
+        }
+        const what = this.targetCaption || (this.target ? '#' + this.target : this.targetType);
+        return (this.action ? this.action.toLowerCase() + ' ' : '') + what;
+    },
+    oneditprepare: function () {
+        const node = this;
+        const S = window.SuplaNodeRED;
+        const lists = {channel: 'channels', group: 'groups', scene: 'scenes'};
+        const targetSel = $('#node-input-target');
+        const actionSel = $('#node-input-action');
+        const status = $('#supla-out-status');
+
+        function fillActions() {
+            const item = S.itemOf(targetSel);
+            const current = actionSel.val() || node.action;
+            actionSel.empty().append($('<option>').val('').text(node._('supla-out.action.fromPayload')));
+            const actions = item && item.actions ? item.actions : [];
+            actions.forEach(function (a) {
+                actionSel.append($('<option>').val(a).text(a));
+            });
+            if (current && !actions.includes(current)) {
+                actionSel.append($('<option>').val(current).text(current));
+            }
+            actionSel.val(current || '');
+        }
+
+        function loadTargets(refresh) {
+            const type = $('#node-input-targetType').val();
+            const configId = $('#node-input-config').val();
+            if (type === 'msg') {
+                return;
+            }
+            status.text('…');
+            S.load(configId, lists[type], refresh).then(function (items) {
+                S.fill(targetSel, items, targetSel.val() || node.target);
+                status.text('');
+                fillActions();
+            }, function (err) {
+                S.fill(targetSel, [], targetSel.val() || node.target);
+                status.text(err.message);
+                fillActions();
+            });
+        }
+
+        $('#node-input-targetType').on('change', function () {
+            const isMsg = this.value === 'msg';
+            $('.supla-out-target-row').toggle(!isMsg);
+            if (!isMsg) {
+                targetSel.val('');
+                loadTargets(false);
+            }
+        });
+        $('#node-input-config').on('change', function () {
+            loadTargets(false);
+        });
+        targetSel.on('change', fillActions);
+        $('#supla-out-refresh').on('click', function () {
+            loadTargets(true);
+        });
+        $('#node-input-params').typedInput({type: 'json', types: ['json']});
+        $('.supla-out-target-row').toggle(node.targetType !== 'msg');
+        loadTargets(false);
+    },
+    oneditsave: function () {
+        const item = window.SuplaNodeRED.itemOf($('#node-input-target'));
+        this.targetCaption = item ? item.caption : '';
+        if ($('#node-input-targetType').val() === 'msg') {
+            $('#node-input-target').val('');
+        }
+    },
+});
+</script>
+
+<script type="text/html" data-template-name="supla-out">
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-cog"></i> <span data-i18n="supla-out.label.config"></span></label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label for="node-input-targetType"><i class="fa fa-crosshairs"></i> <span data-i18n="supla-out.label.targetType"></span></label>
+        <select id="node-input-targetType">
+            <option value="channel" data-i18n="supla-out.targetType.channel"></option>
+            <option value="group" data-i18n="supla-out.targetType.group"></option>
+            <option value="scene" data-i18n="supla-out.targetType.scene"></option>
+            <option value="msg" data-i18n="supla-out.targetType.msg"></option>
+        </select>
+    </div>
+    <div class="form-row supla-out-target-row">
+        <label for="node-input-target"><i class="fa fa-lightbulb-o"></i> <span data-i18n="supla-out.label.target"></span></label>
+        <select id="node-input-target" style="width: calc(70% - 40px);"></select>
+        <button type="button" class="red-ui-button" id="supla-out-refresh"><i class="fa fa-refresh"></i></button>
+    </div>
+    <div class="form-row supla-out-target-row">
+        <label></label><span id="supla-out-status" style="color: var(--red-ui-text-color-error, #c00);"></span>
+    </div>
+    <div class="form-row">
+        <label for="node-input-action"><i class="fa fa-bolt"></i> <span data-i18n="supla-out.label.action"></span></label>
+        <select id="node-input-action"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-params"><i class="fa fa-sliders"></i> <span data-i18n="supla-out.label.params"></span></label>
+        <input type="text" id="node-input-params">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="supla-out.label.name"></span></label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>

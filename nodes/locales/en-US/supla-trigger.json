@@ -1,0 +1,20 @@
+{
+    "supla-trigger": {
+        "label": {
+            "config": "Server",
+            "name": "Name",
+            "channels": "Channels",
+            "actions": "Actions"
+        },
+        "placeholder": {
+            "actions": "all, e.g. press_x1,hold"
+        },
+        "tip": {
+            "channels": "Action trigger channels. Nothing selected means all."
+        },
+        "errors": {
+            "noConfig": "No SUPLA server configured",
+            "needsMqtt": "needs MQTT in the server settings"
+        }
+    }
+}

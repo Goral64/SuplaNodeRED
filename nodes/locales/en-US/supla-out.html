@@ -1,0 +1,30 @@
+<script type="text/html" data-help-name="supla-out">
+    <p>Runs an action on a channel, a channel group or a scene.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">boolean | number | string | object</span></dt>
+        <dd>Used when no action is chosen in the node and <code>msg.action</code> is not set:
+            <ul>
+                <li><code>true</code> / <code>false</code>: turn on / off; for roller shutters reveal / shut,
+                    for gates and valves open / close,</li>
+                <li>a number: shut percentage for roller shutters, brightness for dimmers, set temperature for
+                    thermostats,</li>
+                <li><code>"#RRGGBB"</code>: colour for RGB lighting,</li>
+                <li>an action name, e.g. <code>"toggle"</code>, <code>"open_close"</code>, <code>"stop"</code>,</li>
+                <li><code>{"action": "SHUT_PARTIALLY", "percentage": 30}</code>: action with parameters.</li>
+            </ul>
+            For a scene any message runs it.</dd>
+        <dt class="optional">action <span class="property-type">string</span></dt>
+        <dd>Action name, e.g. <code>TURN_ON</code>, <code>SHUT_PARTIALLY</code>, <code>SET_RGBW_PARAMETERS</code>.</dd>
+        <dt class="optional">params <span class="property-type">object</span></dt>
+        <dd>Action parameters, added to the ones set in the node, e.g. <code>{"percentage": 50}</code>,
+            <code>{"brightness": 80}</code>, <code>{"durationMs": 60000}</code>, <code>{"temperature": 21.5}</code>.</dd>
+        <dt class="optional">target <span class="property-type">object</span></dt>
+        <dd><code>{"type": "channel" | "group" | "scene", "id": 123}</code>, overrides the target set in the node.</dd>
+        <dt class="optional">channelId <span class="property-type">number</span></dt>
+        <dd>Channel ID, overrides the channel set in the node.</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <p>After the Cloud accepts the action the message goes on, with <code>msg.supla</code> set to
+        <code>{type, id, action, params}</code>.</p>
+</script>

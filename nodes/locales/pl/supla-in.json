@@ -1,0 +1,21 @@
+{
+    "supla-in": {
+        "label": {
+            "config": "Serwer",
+            "name": "Nazwa",
+            "channels": "Kanały",
+            "properties": "Tylko przy zmianie",
+            "sendInitial": "Wyślij bieżący stan na starcie"
+        },
+        "placeholder": {
+            "properties": "każda zmiana, np. on,hi,temperature"
+        },
+        "tip": {
+            "channels": "Bez zaznaczenia: wszystkie kanały. Ctrl+klik zaznacza kilka."
+        },
+        "errors": {
+            "noConfig": "Brak konfiguracji serwera SUPLA",
+            "noSource": "stan na żywo wyłączony w ustawieniach serwera"
+        }
+    }
+}

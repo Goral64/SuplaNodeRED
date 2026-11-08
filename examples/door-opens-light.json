@@ -1,0 +1,84 @@
+[
+    {
+        "id": "a1d00r00000001",
+        "type": "tab",
+        "label": "Door opens the light",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a1d00r00000002",
+        "type": "comment",
+        "z": "a1d00r00000001",
+        "name": "Set your token in the SUPLA node, then pick the sensor and the light",
+        "info": "",
+        "x": 340,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "a1d00r00000003",
+        "type": "supla-in",
+        "z": "a1d00r00000001",
+        "name": "Door sensor",
+        "config": "a1c0nf160000001",
+        "channels": [],
+        "properties": "hi",
+        "sendInitial": false,
+        "channelsCaption": "",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "a1d00r00000004"
+            ]
+        ]
+    },
+    {
+        "id": "a1d00r00000004",
+        "type": "function",
+        "z": "a1d00r00000001",
+        "name": "opened?",
+        "func": "// hi is true when the door is closed\nif (msg.payload.hi === false) {\n    msg.payload = true;\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "a1d00r00000005"
+            ]
+        ]
+    },
+    {
+        "id": "a1d00r00000005",
+        "type": "supla-out",
+        "z": "a1d00r00000001",
+        "name": "Hall light",
+        "config": "a1c0nf160000001",
+        "targetType": "channel",
+        "target": "",
+        "action": "",
+        "params": "",
+        "targetCaption": "",
+        "x": 490,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1c0nf160000001",
+        "type": "supla-config",
+        "name": "SUPLA",
+        "server": "",
+        "stateSource": "mqtt",
+        "pollInterval": 10,
+        "mqttHost": "",
+        "mqttPort": 1883,
+        "mqttTls": false,
+        "mqttInsecure": false,
+        "mqttUsername": "",
+        "mqttPrefix": "",
+        "suid": ""
+    }
+]
