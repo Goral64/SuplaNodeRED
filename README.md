@@ -14,40 +14,56 @@ and with your own SUPLA server.
 
 ## Install
 
-In Node-RED: Manage palette, Install, search for `node-red-contrib-supla`. Or in the Node-RED
-directory (usually `~/.node-red`):
+### SuplaOS
+
+[SuplaOS](https://github.com/Goral64/SuplaOS) has a Node-RED add-on with these nodes already
+installed and set up. Install the add-on in the panel and you can start building flows, the SUPLA
+server node is there and connected to your account.
+
+### Other Node-RED installs
+
+The nodes work in any Node-RED 3.1 or newer on Node.js 18 or newer, with supla.org or with your own
+server. In the Node-RED directory (usually `~/.node-red`, in the `nodered/node-red` Docker image it
+is `/data`):
 
 ```
-npm install node-red-contrib-supla
+npm install github:Goral64/SuplaNodeRED#v0.1.2
 ```
 
-Node.js 18 or newer and Node-RED 3.1 or newer.
+and restart Node-RED. Pick the newest tag from the
+[tags page](https://github.com/Goral64/SuplaNodeRED/tags).
 
-## Setup
+Then open any SUPLA node and add a server:
 
 1. In SUPLA Cloud go to Security, Personal access tokens and make a token. Tick at least reading and
    running actions on channels, and the same for channel groups and scenes if you want to use them.
-2. Add any SUPLA node to a flow, open it and add a new server. Paste the token. The server address
-   is part of the token, so the field below can stay empty. "Check connection" tells you if it
-   works.
+2. Paste the token. The server address is part of the token, so the field below can stay empty.
+   Fill it in only if Node-RED reaches the Cloud at a different address than the one the Cloud
+   knows itself by. "Check connection" tells you if it works.
 3. Choose how the nodes learn about changes:
-   - **MQTT** – changes arrive at once. Turn on the MQTT broker in the Cloud (Integrations, MQTT
-     Broker), generate a password there and copy the host, port and password into the node. The
-     user name can stay empty, the node takes it from the token. On your own server supla-server
-     has to be set up to publish to a broker.
+   - **MQTT** – changes arrive at once and button events work. On supla.org turn on the MQTT broker
+     in the Cloud (Integrations, MQTT Broker), generate a password there and copy the host, port and
+     password into the node, ticking TLS if the page says so. The user name can stay empty, the node
+     takes it from the token. On your own server supla-server has to publish to a broker you run
+     (the `SUPLA_MQTT_BROKER_*` variables of the supla-server and supla-cloud containers, then MQTT
+     turned on for your account in the Cloud); put that broker's address and login in the node.
    - **Ask the Cloud** – no MQTT needed, the node asks for the state of all channels every few
-     seconds (10 by default). Keep in mind the Cloud allows about 1000 requests per hour.
+     seconds (10 by default). Changes come with a delay and button events don't work. The Cloud
+     allows about 1000 requests per hour, so don't go below 5 s.
    - **None** – only actions and reading state on demand.
 
-Button events (supla trigger) only come over MQTT.
+Your own server with a self-signed certificate (supla-docker has one by default): start Node-RED
+with `NODE_EXTRA_CA_CERTS=/path/to/ca.crt` pointing at the server's certificate or its CA, or tick
+"Accept any certificate" in the server node. MQTT over TLS has a box of its own for that.
 
-If your own server has a self-signed certificate, give Node-RED its CA certificate in the
-`NODE_EXTRA_CA_CERTS` environment variable, or tick "Accept any certificate".
+Instead of typing all this into the node you can tick "Take settings from environment variables"
+and set them for Node-RED, which is handy with docker-compose. The token then isn't stored in the
+flows:
 
-For ready-made installs the server node can take everything from environment variables:
-`SUPLA_TOKEN`, `SUPLA_SERVER` (optional), `SUPLA_MQTT_URL` (e.g. `mqtt://mosquitto:1883`),
-`SUPLA_MQTT_USERNAME`, `SUPLA_MQTT_PASSWORD`, `SUPLA_MQTT_PREFIX` and `SUPLA_TLS_INSECURE`. Tick
-"Take settings from environment variables" in the node.
+- `SUPLA_TOKEN` – the token,
+- `SUPLA_MQTT_URL` – e.g. `mqtts://host:8883`; without it the node asks the Cloud every few seconds,
+- `SUPLA_MQTT_USERNAME`, `SUPLA_MQTT_PASSWORD` – broker login,
+- `SUPLA_MQTT_PREFIX`, `SUPLA_SERVER`, `SUPLA_TLS_INSECURE` – optional.
 
 ## Using the nodes
 

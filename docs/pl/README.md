@@ -14,41 +14,55 @@ i z własnym serwerem SUPLA.
 
 ## Instalacja
 
-W Node-RED: Manage palette, Install, wyszukaj `node-red-contrib-supla`. Albo w katalogu Node-RED
-(zwykle `~/.node-red`):
+### SuplaOS
+
+[SuplaOS](https://github.com/Goral64/SuplaOS) ma dodatek Node-RED z tymi węzłami, od razu
+zainstalowanymi i skonfigurowanymi. Wystarczy zainstalować dodatek w panelu i można budować
+przepływy, węzeł serwera SUPLA jest już na miejscu i połączony z kontem.
+
+### Inne instalacje Node-RED
+
+Węzły działają w każdym Node-RED 3.1 lub nowszym na Node.js 18 lub nowszym, z supla.org i z własnym
+serwerem. W katalogu Node-RED (zwykle `~/.node-red`, w obrazie Dockera `nodered/node-red` to `/data`):
 
 ```
-npm install node-red-contrib-supla
+npm install github:Goral64/SuplaNodeRED#v0.1.2
 ```
 
-Potrzebny jest Node.js 18 lub nowszy i Node-RED 3.1 lub nowszy.
+i restart Node-RED. Najnowszy tag jest na [stronie tagów](https://github.com/Goral64/SuplaNodeRED/tags).
 
-## Konfiguracja
+Potem otwórz dowolny węzeł SUPLA i dodaj serwer:
 
 1. W SUPLA Cloud wejdź w Bezpieczeństwo, Osobiste tokeny dostępowe i utwórz token. Zaznacz co
    najmniej odczyt i wykonywanie akcji na kanałach, a jeśli chcesz ich używać, to samo dla grup
    kanałów i scen.
-2. Dodaj do przepływu dowolny węzeł SUPLA, otwórz go i dodaj nowy serwer. Wklej token. Adres
-   serwera jest zapisany w tokenie, więc pole pod nim może zostać puste. Przycisk „Sprawdź
-   połączenie” pokaże, czy wszystko działa.
+2. Wklej token. Adres serwera jest zapisany w tokenie, więc pole pod nim może zostać puste. Wpisz go
+   tylko wtedy, gdy Node-RED widzi Cloud pod innym adresem, niż Cloud sam o sobie myśli. Przycisk
+   „Sprawdź połączenie” pokaże, czy wszystko działa.
 3. Wybierz, skąd węzły mają wiedzieć o zmianach:
-   - **MQTT** – zmiany przychodzą od razu. Włącz broker MQTT w Cloud (Integracje, Broker MQTT),
-     wygeneruj tam hasło i przepisz do węzła host, port i hasło. Użytkownika można zostawić pustego,
-     węzeł weźmie go z tokena. Na własnym serwerze supla-server musi mieć ustawione publikowanie
-     do brokera.
+   - **MQTT** – zmiany przychodzą od razu i działają zdarzenia przycisków. Na supla.org włącz broker
+     MQTT w Cloud (Integracje, Broker MQTT), wygeneruj tam hasło i przepisz do węzła host, port
+     i hasło, a jeśli strona tak podaje, zaznacz TLS. Użytkownika można zostawić pustego, węzeł
+     weźmie go z tokena. Na własnym serwerze supla-server musi publikować do brokera, którego sam
+     stawiasz (zmienne `SUPLA_MQTT_BROKER_*` kontenerów supla-server i supla-cloud, potem MQTT
+     włączone dla konta w Cloud); w węźle podajesz adres i login tego brokera.
    - **Pytanie Cloud** – bez MQTT, węzeł co kilka sekund (domyślnie co 10) pobiera stan wszystkich
-     kanałów. Cloud pozwala na ok. 1000 zapytań na godzinę.
+     kanałów. Zmiany przychodzą z opóźnieniem, a zdarzenia przycisków nie działają. Cloud pozwala
+     na ok. 1000 zapytań na godzinę, więc nie schodź poniżej 5 s.
    - **Brak** – tylko akcje i odczyt stanu na żądanie.
 
-Zdarzenia przycisków (supla trigger) przychodzą tylko przez MQTT.
+Własny serwer z samopodpisanym certyfikatem (supla-docker ma taki domyślnie): uruchom Node-RED
+ze zmienną `NODE_EXTRA_CA_CERTS=/ścieżka/do/ca.crt`, wskazującą certyfikat serwera albo jego CA,
+albo zaznacz w węźle serwera „Akceptuj każdy certyfikat”. MQTT z TLS ma do tego osobne pole.
 
-Jeśli własny serwer ma samopodpisany certyfikat, podaj Node-RED certyfikat CA w zmiennej
-`NODE_EXTRA_CA_CERTS` albo zaznacz „Akceptuj każdy certyfikat”.
+Zamiast wpisywać to wszystko w węźle, można zaznaczyć „Ustawienia ze zmiennych środowiskowych”
+i ustawić je dla Node-RED, co przydaje się przy docker-compose. Token nie jest wtedy zapisany
+w przepływach:
 
-W gotowych instalacjach węzeł serwera może wziąć wszystko ze zmiennych środowiskowych:
-`SUPLA_TOKEN`, `SUPLA_SERVER` (opcjonalnie), `SUPLA_MQTT_URL` (np. `mqtt://mosquitto:1883`),
-`SUPLA_MQTT_USERNAME`, `SUPLA_MQTT_PASSWORD`, `SUPLA_MQTT_PREFIX` i `SUPLA_TLS_INSECURE`. Wystarczy
-zaznaczyć w węźle „Ustawienia ze zmiennych środowiskowych”.
+- `SUPLA_TOKEN` – token,
+- `SUPLA_MQTT_URL` – np. `mqtts://host:8883`; bez niej węzeł co kilka sekund pyta Cloud,
+- `SUPLA_MQTT_USERNAME`, `SUPLA_MQTT_PASSWORD` – login brokera,
+- `SUPLA_MQTT_PREFIX`, `SUPLA_SERVER`, `SUPLA_TLS_INSECURE` – opcjonalnie.
 
 ## Używanie
 
