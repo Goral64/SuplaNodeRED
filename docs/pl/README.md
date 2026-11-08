@@ -23,13 +23,14 @@ przepływy, węzeł serwera SUPLA jest już na miejscu i połączony z kontem.
 ### Inne instalacje Node-RED
 
 Węzły działają w każdym Node-RED 3.1 lub nowszym na Node.js 18 lub nowszym, z supla.org i z własnym
-serwerem. W katalogu Node-RED (zwykle `~/.node-red`, w obrazie Dockera `nodered/node-red` to `/data`):
+serwerem. W Node-RED otwórz Manage palette, Install i wyszukaj `node-red-contrib-supla`. Albo
+w katalogu Node-RED (zwykle `~/.node-red`, w obrazie Dockera `nodered/node-red` to `/data`):
 
 ```
-npm install github:Goral64/SuplaNodeRED#v0.1.2
+npm install node-red-contrib-supla
 ```
 
-i restart Node-RED. Najnowszy tag jest na [stronie tagów](https://github.com/Goral64/SuplaNodeRED/tags).
+i restart Node-RED.
 
 Potem otwórz dowolny węzeł SUPLA i dodaj serwer:
 
@@ -44,8 +45,8 @@ Potem otwórz dowolny węzeł SUPLA i dodaj serwer:
      MQTT w Cloud (Integracje, Broker MQTT), wygeneruj tam hasło i przepisz do węzła host, port
      i hasło, a jeśli strona tak podaje, zaznacz TLS. Użytkownika można zostawić pustego, węzeł
      weźmie go z tokena. Na własnym serwerze supla-server musi publikować do brokera, którego sam
-     stawiasz (zmienne `SUPLA_MQTT_BROKER_*` kontenerów supla-server i supla-cloud, potem MQTT
-     włączone dla konta w Cloud); w węźle podajesz adres i login tego brokera.
+     stawiasz: ustaw zmienne `SUPLA_MQTT_BROKER_*` w pliku `.env` supla-docker, uruchom go ponownie
+     i włącz MQTT dla konta w Cloud. Potem w węźle podajesz adres i login tego brokera.
    - **Pytanie Cloud** – bez MQTT, węzeł co kilka sekund (domyślnie co 10) pobiera stan wszystkich
      kanałów. Zmiany przychodzą z opóźnieniem, a zdarzenia przycisków nie działają. Cloud pozwala
      na ok. 1000 zapytań na godzinę, więc nie schodź poniżej 5 s.

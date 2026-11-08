@@ -23,15 +23,14 @@ server node is there and connected to your account.
 ### Other Node-RED installs
 
 The nodes work in any Node-RED 3.1 or newer on Node.js 18 or newer, with supla.org or with your own
-server. In the Node-RED directory (usually `~/.node-red`, in the `nodered/node-red` Docker image it
-is `/data`):
+server. In Node-RED open Manage palette, Install, and search for `node-red-contrib-supla`. Or in the
+Node-RED directory (usually `~/.node-red`, in the `nodered/node-red` Docker image it is `/data`):
 
 ```
-npm install github:Goral64/SuplaNodeRED#v0.1.2
+npm install node-red-contrib-supla
 ```
 
-and restart Node-RED. Pick the newest tag from the
-[tags page](https://github.com/Goral64/SuplaNodeRED/tags).
+and restart Node-RED.
 
 Then open any SUPLA node and add a server:
 
@@ -44,9 +43,9 @@ Then open any SUPLA node and add a server:
    - **MQTT** – changes arrive at once and button events work. On supla.org turn on the MQTT broker
      in the Cloud (Integrations, MQTT Broker), generate a password there and copy the host, port and
      password into the node, ticking TLS if the page says so. The user name can stay empty, the node
-     takes it from the token. On your own server supla-server has to publish to a broker you run
-     (the `SUPLA_MQTT_BROKER_*` variables of the supla-server and supla-cloud containers, then MQTT
-     turned on for your account in the Cloud); put that broker's address and login in the node.
+     takes it from the token. On your own server supla-server has to publish to a broker you run:
+     set the `SUPLA_MQTT_BROKER_*` variables in the `.env` file of supla-docker, restart it and turn
+     MQTT on for your account in the Cloud. Then put that broker's address and login in the node.
    - **Ask the Cloud** – no MQTT needed, the node asks for the state of all channels every few
      seconds (10 by default). Changes come with a delay and button events don't work. The Cloud
      allows about 1000 requests per hour, so don't go below 5 s.
