@@ -16,6 +16,11 @@ RED.nodes.registerType('supla-get', {
     label: function () {
         return this.name || this.targetCaption || (this.target ? '#' + this.target : 'supla get');
     },
+    onadd: function () {
+        if (window.SuplaNodeRED) {
+            window.SuplaNodeRED.pickConfig(this);
+        }
+    },
     oneditprepare: function () {
         const node = this;
         const S = window.SuplaNodeRED;

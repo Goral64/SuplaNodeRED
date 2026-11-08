@@ -24,6 +24,11 @@ RED.nodes.registerType('supla-in', {
         const n = (this.channels || []).length;
         return n === 0 ? 'supla: all channels' : n === 1 ? '#' + this.channels[0] : 'supla: ' + n + ' channels';
     },
+    onadd: function () {
+        if (window.SuplaNodeRED) {
+            window.SuplaNodeRED.pickConfig(this);
+        }
+    },
     oneditprepare: function () {
         const node = this;
         const S = window.SuplaNodeRED;

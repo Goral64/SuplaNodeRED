@@ -20,6 +20,11 @@ RED.nodes.registerType('supla-trigger', {
         const what = this.channelsCaption || ((this.channels || []).length === 1 ? '#' + this.channels[0] : 'supla trigger');
         return this.actions ? what + ': ' + this.actions : what;
     },
+    onadd: function () {
+        if (window.SuplaNodeRED) {
+            window.SuplaNodeRED.pickConfig(this);
+        }
+    },
     oneditprepare: function () {
         const node = this;
         const S = window.SuplaNodeRED;

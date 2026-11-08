@@ -1,8 +1,13 @@
 {
   "name": "node-red-contrib-supla",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node-RED nodes for SUPLA: react to channel state, run actions on channels, groups and scenes",
-  "keywords": ["node-red", "supla", "home automation", "mqtt"],
+  "keywords": [
+    "node-red",
+    "supla",
+    "home automation",
+    "mqtt"
+  ],
   "license": "GPL-3.0-only",
   "author": "Goral64",
   "repository": {
@@ -10,7 +15,13 @@
     "url": "git+https://github.com/Goral64/SuplaNodeRED.git"
   },
   "main": "nodes/supla-config.js",
-  "files": ["lib/", "nodes/", "examples/", "README.md", "LICENSE"],
+  "files": [
+    "lib/",
+    "nodes/",
+    "examples/",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": {
     "node": ">=18"
   },

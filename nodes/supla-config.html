@@ -82,7 +82,25 @@
         return select.find('option:selected').data('item');
     }
 
-    window.SuplaNodeRED = {load: load, fill: fill, itemOf: itemOf, label: label};
+    // A newly added node gets the server when there is exactly one, so in
+    // a ready-made install it's enough to drop a node and pick a channel.
+    function pickConfig(node) {
+        if (node.config) {
+            return;
+        }
+        const found = [];
+        RED.nodes.eachConfig(function (cfg) {
+            if (cfg.type === 'supla-config' && (!cfg.z || cfg.z === node.z)) {
+                found.push(cfg);
+            }
+        });
+        if (found.length === 1) {
+            // RED.nodes.add() registers the node as a user of this config.
+            node.config = found[0].id;
+        }
+    }
+
+    window.SuplaNodeRED = {load: load, fill: fill, itemOf: itemOf, label: label, pickConfig: pickConfig};
 })();
 
 RED.nodes.registerType('supla-config', {

@@ -36,6 +36,11 @@ RED.nodes.registerType('supla-out', {
         const what = this.targetCaption || (this.target ? '#' + this.target : this.targetType);
         return (this.action ? this.action.toLowerCase() + ' ' : '') + what;
     },
+    onadd: function () {
+        if (window.SuplaNodeRED) {
+            window.SuplaNodeRED.pickConfig(this);
+        }
+    },
     oneditprepare: function () {
         const node = this;
         const S = window.SuplaNodeRED;
