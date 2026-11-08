@@ -30,7 +30,7 @@
         "type": "supla-get",
         "z": "a1t3mp00000001",
         "name": "Thermometer",
-        "config": "a1c0nf160000001",
+        "config": "",
         "targetType": "channel",
         "target": "",
         "targetCaption": "",
@@ -94,7 +94,7 @@
         "type": "supla-out",
         "z": "a1t3mp00000001",
         "name": "Heater",
-        "config": "a1c0nf160000001",
+        "config": "",
         "targetType": "channel",
         "target": "",
         "action": "",
@@ -105,20 +105,5 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "a1c0nf160000001",
-        "type": "supla-config",
-        "name": "SUPLA",
-        "server": "",
-        "stateSource": "mqtt",
-        "pollInterval": 10,
-        "mqttHost": "",
-        "mqttPort": 1883,
-        "mqttTls": false,
-        "mqttInsecure": false,
-        "mqttUsername": "",
-        "mqttPrefix": "",
-        "suid": ""
     }
 ]

@@ -24,6 +24,7 @@ RED.nodes.registerType('supla-get', {
     oneditprepare: function () {
         const node = this;
         const S = window.SuplaNodeRED;
+        S.pickConfigInDialog(node);
         const targetSel = $('#node-input-target');
         const status = $('#supla-get-status');
 

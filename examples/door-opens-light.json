@@ -21,7 +21,7 @@
         "type": "supla-in",
         "z": "a1d00r00000001",
         "name": "Door sensor",
-        "config": "a1c0nf160000001",
+        "config": "",
         "channels": [],
         "properties": "hi",
         "sendInitial": false,
@@ -54,7 +54,7 @@
         "type": "supla-out",
         "z": "a1d00r00000001",
         "name": "Hall light",
-        "config": "a1c0nf160000001",
+        "config": "",
         "targetType": "channel",
         "target": "",
         "action": "",
@@ -65,20 +65,5 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "a1c0nf160000001",
-        "type": "supla-config",
-        "name": "SUPLA",
-        "server": "",
-        "stateSource": "mqtt",
-        "pollInterval": 10,
-        "mqttHost": "",
-        "mqttPort": 1883,
-        "mqttTls": false,
-        "mqttInsecure": false,
-        "mqttUsername": "",
-        "mqttPrefix": "",
-        "suid": ""
     }
 ]

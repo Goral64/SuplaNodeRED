@@ -1,0 +1,151 @@
+[
+    {
+        "id": "a1d0pn00000001",
+        "type": "tab",
+        "label": "Door left open",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a1d0pn00000002",
+        "type": "comment",
+        "z": "a1d0pn00000001",
+        "name": "Pick the door sensor in the 'Door' node",
+        "info": "For a quick test change 5 minutes to 10 seconds in the 'wait 5 min' node.",
+        "x": 200,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a1d0pn00000003",
+        "type": "supla-in",
+        "z": "a1d0pn00000001",
+        "name": "Door",
+        "config": "",
+        "channels": [],
+        "properties": "hi",
+        "sendInitial": false,
+        "channelsCaption": "",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "a1d0pn00000004",
+                "a1d0pn00000008"
+            ]
+        ]
+    },
+    {
+        "id": "a1d0pn00000004",
+        "type": "switch",
+        "z": "a1d0pn00000001",
+        "name": "opened / closed",
+        "property": "payload.hi",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 300,
+        "y": 120,
+        "wires": [
+            [
+                "a1d0pn00000005"
+            ],
+            [
+                "a1d0pn00000006"
+            ]
+        ]
+    },
+    {
+        "id": "a1d0pn00000005",
+        "type": "trigger",
+        "z": "a1d0pn00000001",
+        "name": "wait 5 min",
+        "op1": "",
+        "op2": "The door has been open for 5 minutes",
+        "op1type": "nul",
+        "op2type": "str",
+        "duration": "5",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "min",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "a1d0pn00000007"
+            ]
+        ]
+    },
+    {
+        "id": "a1d0pn00000006",
+        "type": "change",
+        "z": "a1d0pn00000001",
+        "name": "cancel",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 160,
+        "wires": [
+            [
+                "a1d0pn00000005"
+            ]
+        ]
+    },
+    {
+        "id": "a1d0pn00000007",
+        "type": "debug",
+        "z": "a1d0pn00000001",
+        "name": "alarm",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 690,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "a1d0pn00000008",
+        "type": "debug",
+        "z": "a1d0pn00000001",
+        "name": "every change",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 310,
+        "y": 200,
+        "wires": []
+    }
+]

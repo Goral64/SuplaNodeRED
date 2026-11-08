@@ -72,7 +72,9 @@ channel, and supla in also gives `msg.previous` and `msg.changed`.
 **supla trigger** puts the action in `msg.payload`: `press_x1`…`press_x5`, `toggle_x1`…`toggle_x5`,
 `hold`, `turn_on`, `turn_off`.
 
-There are a few example flows in Import, Examples, node-red-contrib-supla.
+There are a few example flows in Import, Examples, node-red-contrib-supla. "door-left-open" is a
+good one to start with, it only needs a door or window sensor. Imported nodes use your server if
+you have just one, otherwise pick it in each node.
 
 ## Tests
 

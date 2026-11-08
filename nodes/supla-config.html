@@ -82,25 +82,64 @@
         return select.find('option:selected').data('item');
     }
 
-    // A newly added node gets the server when there is exactly one, so in
-    // a ready-made install it's enough to drop a node and pick a channel.
-    function pickConfig(node) {
-        if (node.config) {
-            return;
-        }
+    function onlyConfig(z) {
         const found = [];
         RED.nodes.eachConfig(function (cfg) {
-            if (cfg.type === 'supla-config' && (!cfg.z || cfg.z === node.z)) {
+            if (cfg.type === 'supla-config' && (!cfg.z || cfg.z === z)) {
                 found.push(cfg);
             }
         });
-        if (found.length === 1) {
-            // RED.nodes.add() registers the node as a user of this config.
-            node.config = found[0].id;
+        return found.length === 1 ? found[0] : null;
+    }
+
+    // A new or imported node gets the server when there is exactly one, so
+    // it's enough to drop a node (or import a flow) and pick a channel.
+    function pickConfig(node) {
+        if (node.config && RED.nodes.node(node.config)) {
+            return;
+        }
+        const cfg = onlyConfig(node.z);
+        if (!cfg) {
+            return;
+        }
+        node.config = cfg.id;
+        // A node dropped from the palette is registered as a user of the
+        // config by RED.nodes.add() later on; an imported one is already
+        // added, so register it here.
+        if (RED.nodes.node(node.id)) {
+            cfg.users = cfg.users || [];
+            if (cfg.users.indexOf(node) === -1) {
+                cfg.users.push(node);
+            }
+            node.changed = true;
+            RED.events.emit('nodes:change', cfg);
         }
     }
 
-    window.SuplaNodeRED = {load: load, fill: fill, itemOf: itemOf, label: label, pickConfig: pickConfig};
+    // In the edit dialog of a node that still has no server.
+    function pickConfigInDialog(node) {
+        const select = $('#node-input-config');
+        if (select.val() && select.val() !== '_ADD_') {
+            return;
+        }
+        const cfg = onlyConfig(node.z);
+        if (cfg) {
+            select.val(cfg.id).trigger('change');
+        }
+    }
+
+    // Imported nodes (e.g. the examples) only get onadd when they land on the
+    // active tab, so catch them here. Nodes loaded with the flows at start
+    // are not marked as changed and are left alone.
+    const TYPES = ['supla-in', 'supla-get', 'supla-out', 'supla-trigger'];
+    RED.events.on('nodes:add', function (node) {
+        if (node && TYPES.indexOf(node.type) !== -1 && node.changed) {
+            pickConfig(node);
+        }
+    });
+
+    window.SuplaNodeRED = {load: load, fill: fill, itemOf: itemOf, label: label, pickConfig: pickConfig,
+        pickConfigInDialog: pickConfigInDialog};
 })();
 
 RED.nodes.registerType('supla-config', {

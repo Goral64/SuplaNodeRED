@@ -28,6 +28,7 @@ RED.nodes.registerType('supla-trigger', {
     oneditprepare: function () {
         const node = this;
         const S = window.SuplaNodeRED;
+        S.pickConfigInDialog(node);
         const sel = $('#node-input-channels-select');
         const status = $('#supla-trigger-status');
 

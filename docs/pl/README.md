@@ -73,7 +73,9 @@ podaje też `msg.previous` i `msg.changed`.
 **supla trigger** wstawia akcję do `msg.payload`: `press_x1`…`press_x5`, `toggle_x1`…`toggle_x5`,
 `hold`, `turn_on`, `turn_off`.
 
-Kilka przykładowych przepływów jest w Import, Examples, node-red-contrib-supla.
+Kilka przykładowych przepływów jest w Import, Examples, node-red-contrib-supla. Na początek dobry
+jest „door-left-open”, wystarczy do niego czujnik otwarcia drzwi albo okna. Zaimportowane węzły same
+dostają serwer, jeśli jest tylko jeden, w przeciwnym razie trzeba go wybrać w każdym węźle.
 
 ## Testy
 

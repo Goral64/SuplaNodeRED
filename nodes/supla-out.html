@@ -44,6 +44,7 @@ RED.nodes.registerType('supla-out', {
     oneditprepare: function () {
         const node = this;
         const S = window.SuplaNodeRED;
+        S.pickConfigInDialog(node);
         const lists = {channel: 'channels', group: 'groups', scene: 'scenes'};
         const targetSel = $('#node-input-target');
         const actionSel = $('#node-input-action');

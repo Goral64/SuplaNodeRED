@@ -11,7 +11,7 @@
         "type": "supla-trigger",
         "z": "a1b77n00000001",
         "name": "Double press",
-        "config": "a1c0nf160000001",
+        "config": "",
         "channels": [],
         "actions": "press_x2",
         "channelsCaption": "",
@@ -28,7 +28,7 @@
         "type": "supla-out",
         "z": "a1b77n00000001",
         "name": "Evening scene",
-        "config": "a1c0nf160000001",
+        "config": "",
         "targetType": "scene",
         "target": "",
         "action": "",
@@ -45,7 +45,7 @@
         "type": "supla-trigger",
         "z": "a1b77n00000001",
         "name": "Hold",
-        "config": "a1c0nf160000001",
+        "config": "",
         "channels": [],
         "actions": "hold",
         "channelsCaption": "",
@@ -62,7 +62,7 @@
         "type": "supla-out",
         "z": "a1b77n00000001",
         "name": "All blinds down",
-        "config": "a1c0nf160000001",
+        "config": "",
         "targetType": "group",
         "target": "",
         "action": "SHUT",
@@ -73,20 +73,5 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "a1c0nf160000001",
-        "type": "supla-config",
-        "name": "SUPLA",
-        "server": "",
-        "stateSource": "mqtt",
-        "pollInterval": 10,
-        "mqttHost": "",
-        "mqttPort": 1883,
-        "mqttTls": false,
-        "mqttInsecure": false,
-        "mqttUsername": "",
-        "mqttPrefix": "",
-        "suid": ""
     }
 ]
